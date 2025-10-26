@@ -111,7 +111,7 @@ public:
         int y;
         Edge *p;
 
-        visited[start] = 1;
+        g->visited[start] = 1;
         q.push(start);
 
         while (!q.empty()) {
@@ -120,16 +120,16 @@ public:
             #ifdef 1
             process_vertex_early(v); //пояснение ниже
             #endif
-            processed[v] = 1;
+            g->processed[v] = 1;
             p = g->edges[v];
             while (p != NULL){
                 y = p->y;
-                if ((!processed[y])||(g->dir)){
-                    process_edge(v, y); //пояснение ниже
+                if ((!g->processed[y])||(g->dir)){
+                    process_edge(g, v, y); //пояснение ниже
                 }
-                if (!visited[y]){
+                if (!g->visited[y]){
                     q.push(y);
-                    visited[y] = true;
+                    g->visited[y] = true;
                 }
             p = p->next;
             }
@@ -146,28 +146,26 @@ public:
     //определим его 
 private:
 
-    void process_edge(int x, int y) {
-        if (color[x] == color[y]){
+    void process_edge(Graph *g, int x, int y) {
+        if (g->color[x] == g->color[y]){
         cout << "Граф не является двудольным, раскраска в два цвета невозможна :"<<endl;
         return;            
         }
-        color[y] = rev(color[x]);     
+        g->color[y] = rev(g->color[x]);     
     }
     
     int rev(int x){  //функция обратного значения для int 
-        if (x == 0){ return 1;}
-        if (x == 1){ return 0;}
-        return 2;
+        return 1-x;
     }
 
 public:
 
     void two_color(Graph *g){
-        for (int i = 0; i < g->nvertices; i++) color[i] = 2;
+        for (int i = 0; i < g->nvertices; i++) g->color[i] = 2;
         pred_bfs(g);
         for (int i = 0; i < g->nvertices; i++){
-            if (!visited[i]){
-                color[i] = 0;
+            if (!g->visited[i]){
+                g->color[i] = 0;
                 bfs(g, i);
             }
         }
