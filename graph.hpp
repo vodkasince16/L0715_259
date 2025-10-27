@@ -14,9 +14,6 @@ private:
     struct Edge {
         int y;
         struct Edge *next;
-        #ifdef 1
-        Edge(int vertex) : y(vertex), next(nullptr) {}
-        #endif
     };
 
     vector<Edge*> edges;
@@ -24,12 +21,15 @@ private:
     vector<int> color;
     vector<bool> visited;
     vector<bool> processed;
+public:
     int nvertices;
+private:
     int nedges;
     bool dir;
     int max_vertices = 100;
 
     void process_edge(Graph *g, int x, int y);
+    void process_vertex_early(int v){}
     int rev(int x);
 
 public:

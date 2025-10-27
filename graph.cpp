@@ -7,35 +7,9 @@
 #include "graph.hpp"
 using namespace std;
 
-class Graph {
-    
-private:
 
-    struct Edge { //Данные о элементе графа
-        int y; //информация о смежности
-        struct Edge *next; //указатель на след. ребро
-        #ifdef 1
-        Edge(int vertex) : y(vertex), next(nullptr) {}
-        #endif
-    };
 
-    //Основные данные графа
-
-    vector<Edge*> edges;    //степени смежности
-    vector<int> degree;                         //степени узлов
-public:
-    int nvertices;                              //кол-во узлов 
-private:   
-    int nedges;                                 //кол-во ребер
-    vector<int> color;                       //"цвет" узла
-    bool dir;
-    vector<bool> visited;  //    2 переменные для обхода в ширину
-    vector<bool> processed; //   ||||||||||||||||||||||||||||||||
-    int max_vertices = 100; //ограничение как у скиены(скорее всего только в знак уважения)
-
-public:
-
-    void init_graph(Graph *g, bool dir){ //инициализация графа
+    void Graph::init_graph(Graph *g, bool dir){ //инициализация графа
         g->nvertices = 0;
         g->nedges = 0;
         g->dir  = dir;
@@ -48,7 +22,7 @@ public:
         }
 
     }
-    void ins_edge(Graph *g, int x, int y, bool dir) {
+    void Graph::ins_edge(Graph *g, int x, int y, bool dir) {
         Edge *p;
         p = new Edge;
         p->y = y;
@@ -63,7 +37,7 @@ public:
         g->nedges++;
         }
     }
-    void read_graph(Graph *g, bool dir){  //функция считывания и создания граффа
+    void Graph::read_graph(Graph *g, bool dir){  //функция считывания и создания граффа
         int m, x, y;
         
         cout << "Введите кол-во узлов в графе: ";
@@ -78,17 +52,15 @@ public:
             cin >> x >> y;
             ins_edge(g ,x, y, dir);
             
-            #ifdef 1
             if (x < 1 || x > g->nvertices || y < 1 || y > g->nvertices) {
             cout << "Ошибка: вершины должны быть от 1 до " << g->nvertices << endl;
             i--; // повторяем эту итерацию
             continue;
-            }
-            #endif   //проверка на дурака
+            }         //проверка на дурака
         }
     }
 
-    void print_graph(Graph *g){
+    void Graph::print_graph(Graph *g){
         Edge *p;
         for (int i = 0; i < g->nvertices; i++){
             cout << i <<" ";
@@ -101,13 +73,13 @@ public:
         }
     }
 
-    void process_edge(int x, int y); //доопределим потом
+    
 
-    void pred_bfs(Graph *g){        
+    void Graph::pred_bfs(Graph *g){        
         g->visited.assign(g->nvertices, false);
         g->processed.assign(g->nvertices, false);
     }
-    void bfs(Graph *g, int start){  //Обход в ширину
+    void Graph::bfs(Graph *g, int start){  //Обход в ширину
 
         queue<int> q;
         int v;
@@ -120,9 +92,7 @@ public:
         while (!q.empty()) {
             v = q.front();
             q.pop();
-            #ifdef 1
             process_vertex_early(v); //пояснение ниже
-            #endif
             g->processed[v] = 1;
             p = g->edges[v];
             while (p != NULL){
@@ -147,9 +117,10 @@ public:
 
     //в алгоритме расскраски двумя цветами нам нужно только process_edge
     //определим его 
-private:
+    void Graph::process_vertex_early(int v){}
+    
 
-    void process_edge(Graph *g, int x, int y) {
+    void Graph::process_edge(Graph *g, int x, int y) {
         if (g->color[x] == g->color[y]){
         cout << "Граф не является двудольным, раскраска в два цвета невозможна :"<<endl;
         return;            
@@ -161,9 +132,7 @@ private:
         return 1-x;
     }
 
-public:
-
-    void two_color(Graph *g){
+    void Graph::two_color(Graph *g){
         for (int i = 0; i < g->nvertices; i++) g->color[i] = 2;
         pred_bfs(g);
         for (int i = 0; i < g->nvertices; i++){
@@ -175,7 +144,7 @@ public:
    
     }
 
-    void print_color_graph(Graph *g){
+    void Graph::print_color_graph(Graph *g){
         Edge *p;
         for (int i = 0; i < g->nvertices; i++){
             cout << i <<"(Цвет: "<< g->color[i] << " ) ";
@@ -187,6 +156,6 @@ public:
         cout << endl;
         }
 }
-};
+
 
 
