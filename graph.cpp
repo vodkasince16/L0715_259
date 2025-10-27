@@ -4,6 +4,7 @@
 #include <list>
 #include <unordered_map>
 #include <queue>
+#include "graph.hpp"
 using namespace std;
 
 class Graph {
@@ -14,7 +15,7 @@ private:
         int y; //информация о смежности
         struct Edge *next; //указатель на след. ребро
         #ifdef 1
-        EdgeNode(int vertex) : y(vertex), next(nullptr) {}
+        Edge(int vertex) : y(vertex), next(nullptr) {}
         #endif
     };
 
@@ -22,7 +23,9 @@ private:
 
     vector<Edge*> edges;    //степени смежности
     vector<int> degree;                         //степени узлов
-    int nvertices;                              //кол-во узлов    
+public:
+    int nvertices;                              //кол-во узлов 
+private:   
     int nedges;                                 //кол-во ребер
     vector<int> color;                       //"цвет" узла
     bool dir;
@@ -171,6 +174,19 @@ public:
         }
    
     }
+
+    void print_color_graph(Graph *g){
+        Edge *p;
+        for (int i = 0; i < g->nvertices; i++){
+            cout << i <<"(Цвет: "<< g->color[i] << " ) ";
+            p = g->edges[i];
+            while (p != nullptr){
+                cout << "-> "<< p->y << "(Цвет: "<< g->color[p->y]<< ") "; 
+                p = p->next;
+            }
+        cout << endl;
+        }
+}
 };
 
 
