@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -g
-TARGET = graph_test
+TARGET = graph_test.exe
 
 SOURCES = test.cpp graph.cpp
 HEADERS = graph.hpp
@@ -17,7 +17,7 @@ graph.o: graph.cpp graph.hpp
 	$(CXX) $(CXXFLAGS) -c graph.cpp
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	del $(OBJECTS) $(TARGET)
 
 run: $(TARGET)
 	./$(TARGET)

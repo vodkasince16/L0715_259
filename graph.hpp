@@ -29,7 +29,7 @@ private:
     int max_vertices = 100;
 
     void process_edge(Graph *g, int x, int y);
-    void process_vertex_early(int v){}
+    void process_vertex_early();
     int rev(int x);
 
 public:

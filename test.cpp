@@ -48,5 +48,6 @@ int main(){
     g.two_color(&g);
     
     cout << endl;
+    cin.get();
 
 }

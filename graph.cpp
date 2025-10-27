@@ -9,19 +9,30 @@ using namespace std;
 
 
 
-    void Graph::init_graph(Graph *g, bool dir){ //инициализация графа
-        g->nvertices = 0;
-        g->nedges = 0;
-        g->dir  = dir;
+    void Graph::init_graph(Graph *g, bool dir) {
+    cout << "init_graph: начало" << endl;
+    g->nvertices = 0;
+    g->nedges = 0;
+    g->dir = dir;
 
-        for (int i = 0; i < max_vertices; i++)
-        {
-            g->edges[i] = nullptr;
-            g->degree[i] = 0;
+    // Инициализируем векторы ПЕРЕД использованием
+    g->edges.resize(g->max_vertices);
+    g->degree.resize(g->max_vertices);
+    g->color.resize(g->max_vertices);
+    g->visited.resize(g->max_vertices);
+    g->processed.resize(g->max_vertices);
 
-        }
-
+    // Теперь можно безопасно обращаться по индексам
+    for (int i = 0; i < g->max_vertices; i++) {
+        g->edges[i] = nullptr;
+        g->degree[i] = 0;
+        g->color[i] = 2;
+        g->visited[i] = false;
+        g->processed[i] = false;
     }
+    cout << "init_graph: завершено (размер векторов: " << g->max_vertices << ")" << endl;
+}
+
     void Graph::ins_edge(Graph *g, int x, int y, bool dir) {
         Edge *p;
         p = new Edge;
@@ -92,7 +103,7 @@ using namespace std;
         while (!q.empty()) {
             v = q.front();
             q.pop();
-            process_vertex_early(v); //пояснение ниже
+            process_vertex_early(); //пояснение ниже
             g->processed[v] = 1;
             p = g->edges[v];
             while (p != NULL){
@@ -115,9 +126,15 @@ using namespace std;
     //можем ввести process_vetrex_late после обработки всех соседей
     //эти функции мы редактируем под свои задачи, оставляем пустыми или удаляем
 
+    void Graph::process_vertex_early(){}
+
+    int Graph::rev(int x){  //функция обратного значения для int 
+        return 1-x;
+    }
+    
     //в алгоритме расскраски двумя цветами нам нужно только process_edge
     //определим его 
-    void Graph::process_vertex_early(int v){}
+
     
 
     void Graph::process_edge(Graph *g, int x, int y) {
@@ -126,10 +143,6 @@ using namespace std;
         return;            
         }
         g->color[y] = rev(g->color[x]);     
-    }
-    
-    int rev(int x){  //функция обратного значения для int 
-        return 1-x;
     }
 
     void Graph::two_color(Graph *g){
@@ -147,10 +160,10 @@ using namespace std;
     void Graph::print_color_graph(Graph *g){
         Edge *p;
         for (int i = 0; i < g->nvertices; i++){
-            cout << i <<"(Цвет: "<< g->color[i] << " ) ";
+            cout << "Узел "<< i <<"(Цвет: "<< g->color[i] << " ) соеденен с:";
             p = g->edges[i];
             while (p != nullptr){
-                cout << "-> "<< p->y << "(Цвет: "<< g->color[p->y]<< ") "; 
+                cout << " "<< p->y << "(Цвет: "<< g->color[p->y]<< ") "; 
                 p = p->next;
             }
         cout << endl;
